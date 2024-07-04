@@ -19,9 +19,10 @@ const  dotPlaceholder = function (word) {
     for (const letter of word) {
         console.log(letter);
         letters.push("●");
-    };
+    }
     wordInProgress.innerText = letters.join("");
 };
+
 dotPlaceholder(word);
 
 // event listner for the guess button / /
@@ -79,7 +80,57 @@ const makeGuess = function (playerInput) {
     else {
         guessedLettersList.push(playerInput);
         console.log(guessedLettersList);
+        // guessed letters list
+        showGuessedLetters();
+        wordProgress(guessedLettersList);
     }
     // note: use push.() instead of .append(). the list was empty so there nothing to put the letter behind.
     // push adds value to the front of the array while append adds it at the end of the array.
+};
+
+//  function to show guessed letters
+const showGuessedLetters = function () {
+    // empty the player's guess list
+    guessedLetters.innerHTML = "";
+
+    // create new list item for letters to show on the html page
+    for (const letter of guessedLettersList) {
+        const list = document.createElement("li");
+        // add letters to show on html page
+        list.innerText = letter;
+        // add the letters to the list
+        guessedLetters.append(list);
+    }
+};
+
+// function to update word in progress -- will replace the dots with the correct guessed letters
+const wordProgress = function (guessedLettersList) {
+    // change word to uppercase for makeGuess func
+    const wordUpper = word.toUpperCase();
+    // this splits the word string into in the GLL array
+    const wordArray = wordUpper.split("");
+        // console.log(wordArray); 
+    const guessUpdate = [];
+
+    // check if wordArray contains ant letters from gLL array
+    for (const letter of wordArray) {
+        // changes the dot with the correct letter guess
+        if (guessedLettersList.includes(letter)) {
+            guessUpdate.push(letter.toUpperCase());
+        }else {
+            guessUpdate.push("●");
+        }
+    }
+    // console.log(guessUpdate);
+    // this updates the empty paragraph on th page
+    wordInProgress.innerText = guessUpdate.join("");
+    wordCheckWin();
+};
+
+// function to check if player guessed the word and won the game
+const wordCheckWin = function() {
+    if (wordInProgress.innerText === word.toUpperCase()) {
+        messages.classList.add("win");
+        messages.innerHTML = `<p class="highlight"> You guessed correct the word! Congrats ヾ( ˃ᴗ˂ )◞ !</p>`;
+    }
 };
