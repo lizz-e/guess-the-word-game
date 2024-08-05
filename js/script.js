@@ -37,7 +37,7 @@ getWord();
 const  dotPlaceholder = function (word) {
     const letters = [];
     for (const letter of word) {
-        console.log(letter);
+        // console.log(letter);
         letters.push("●");
     }
     wordInProgress.innerText = letters.join("");
@@ -162,6 +162,8 @@ const updateGuessCount = function (guess) {
     // what to do if the remaining guess value was 0 or not
     if (remainingGuesses === 0) {
         messages.innerHTML = `Gamer Over (×_×) The word was <span class="highlight"> ${word}</span>`;
+        startOver();
+        // once the guesses are used up, the startOver() function gets triggered
     } else if(remainingGuesses === 1) {
         remainingSpan.innerText = `⚠ You only have ${remainingGuesses} guess left ⚠`;
     } else {
@@ -174,5 +176,52 @@ const wordCheckWin = function() {
     if (wordInProgress.innerText === word.toUpperCase()) {
         messages.classList.add("win");
         messages.innerHTML = `<p class="highlight"> You guessed correct the word! Congrats ヾ( ˃ᴗ˂ )◞ !</p>`;
+
+        // add this function to show /  hide elements when player wins
+        startOver();
     }
 };
+
+// func to hide and show 3 elements
+const startOver = function () {
+        guessButton.classList.add("hide");
+        remaining.classList.add("hide");
+        guessedLetters.classList.add("hide");
+        playAgain.classList.remove("hide");
+    // notes:
+    // .hide {display:none;} sooo add or remove .hide to each element 
+    // to hide /  show  the element
+    // placed startOver() in the updateGuessCount and wordCheckWin funcs
+};
+
+// add click event for play button
+playAgain.addEventListener("click", function() {
+    
+    ///// reset orignal values for new game /////
+    
+    // remove "win" class to messages
+    messages.classList.remove("win");
+    // empty message text
+    messages.innerText = "";
+    // empty guess list text
+    guessedLetters.innerHTML = "";
+    // reset guess number back to 8
+    remainingGuesses = 8;
+    // empty the array
+    guessedLettersList.length = 0;
+    // refresh the guess count text from the span element
+    remainingSpan.innerText =  `${remainingGuesses} guesses`;
+    // get new word for new game
+    getWord();
+    
+    ///// UI changes of buttons and letter lists /////
+    
+    // show guess button
+    guessButton.classList.remove("hide");
+    // show remaining guesses
+    remaining.classList.remove("hide");
+    // show guessed letters unordered list
+    guessedLetters.classList.remove("hide");
+    // hide play button
+    playAgain.classList.add("hide");
+});
